@@ -72,7 +72,8 @@ void player_dbinit(PlayerDatabase *db){
    hashmap_init(&db->index, 16);
 }
 
-void player_dbadd(PlayerDatabase *db,Player player){
+void player_dbadd(PlayerDatabase *db, Player player)
+{
    if (db->size == db->capacity){
       db->capacity *= 2;
       Player *temp = realloc(db->data,db->capacity * sizeof(Player));
@@ -82,8 +83,6 @@ void player_dbadd(PlayerDatabase *db,Player player){
       }
       db->data = temp;
    }
-   db->data[db->size] = player;
-   db->size++;
    size_t index = db->size;
    db->data[index] = player;
    if (!hashmap_insert(&db->index, player.id, index)){
