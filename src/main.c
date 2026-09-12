@@ -4,6 +4,9 @@
 #include <unistd.h>
 #include "menu.h"
 int main(){
-   showMenu();
+   PlayerDatabase db;
+   player_dbinit(&db);
+   showMenu(&db);
+   player_dbdestroy(&db);
    return 0;
 }

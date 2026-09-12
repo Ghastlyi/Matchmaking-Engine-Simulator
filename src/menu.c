@@ -4,12 +4,11 @@
 #include "menu.h"
 #include "common.h"
 #include "player.h"
+#include "hashmap.h"
 //Creating Menu (GUI) for Engine
 
-void showMenu(){
+void showMenu(PlayerDatabase *db){
    int choice;
-   PlayerDatabase db;
-   player_dbinit(&db);
    system("color F1");
    while(1){
      printf("---------------------------------------------------\n");
@@ -25,13 +24,24 @@ void showMenu(){
         return;
         case 1:
             Player p=registerPlayer();
-            player_dbadd(&db,p);
+            player_dbadd(db,p);
         break;
         case 2:
         
         break;
         case 3:
-        
+           int id;
+           printf("\nEnter player ID:");
+           scanf("%d", &id);
+           HashNode *node = hashmap_search(&db->index, id);
+           if (node == NULL){
+              printf("Player not found.\n");
+           }
+           else{
+              Player *player = player_dbget(db, node->playerIndex);
+              printf("\nPlayer found!\n");
+              playerPrint(player);
+           }
         break;
         case 4:
         
@@ -60,9 +70,11 @@ void showMenu(){
         case 13:
         break;
         case 14:
-        break;
+         //   player_dbclear(db);
+         //   printf("Database emptied.\n");
+           break;
         case 15:
-        player_dbPrint(&db);
+        player_dbPrint(db);
         break;
       }
    }
