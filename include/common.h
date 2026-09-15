@@ -10,7 +10,7 @@ typedef enum
    waitingPlayers,
    inmatchPlayers,
    inactivePlayers
-} PlayerStatus;
+}PlayerStatus;
 
 typedef enum
 {
@@ -18,6 +18,6 @@ typedef enum
    REG_SIG,
    REG_EU,
    REG_NA
-} Region;
+}Region;
 
 #endif

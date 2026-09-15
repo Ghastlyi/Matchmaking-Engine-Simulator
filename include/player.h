@@ -20,7 +20,7 @@ typedef struct{
 typedef struct{
    Player *data;
    size_t size;  //number of players
-   size_t capacity; //number of slots of players allocated
+   size_t capacity; //number of slots onaf players allocated
    HashMap index;
 } PlayerDatabase;
 
@@ -32,5 +32,7 @@ void player_dbadd(PlayerDatabase *db, Player player);
 Player *player_dbget(PlayerDatabase *db, size_t index);
 Player registerPlayer();
 void player_dbPrint(const PlayerDatabase *db);
+void player_dbremove(PlayerDatabase *db, int player_id);
 void profileprint(Player *player);
+void player_dbclear(PlayerDatabase *db);
 #endif

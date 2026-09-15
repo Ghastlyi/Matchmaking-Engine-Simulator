@@ -12,7 +12,7 @@ typedef struct{
    size_t bucket_count;
    size_t size;
 }HashMap;
- 
+
 void hashmap_init(HashMap *map, size_t bucket_count);
 void hashmap_destroy(HashMap *map);
 int hashmap_insert(HashMap *map,int player_id,size_t player_index);

@@ -26,26 +26,42 @@ void showMenu(PlayerDatabase *db){
             Player p=registerPlayer();
             player_dbadd(db,p);
         break;
-        case 2:
-        
-        break;
-        case 3:
+        case 2:{
            int id;
-           printf("\nEnter player ID:");
+           printf("\nEnter player ID to remove: ");
+           scanf("%d", &id);
+           player_dbremove(db, id);
+           break;
+         }
+           case 3:{
+              int id;
+              printf("\nEnter player ID:");
+              scanf("%d", &id);
+              HashNode *node = hashmap_search(&db->index, id);
+              if (node == NULL){
+                 printf("Player not found.\n");
+               }
+               else{
+                  Player *player = player_dbget(db, node->playerIndex);
+                  printf("\nPlayer found!\n");
+                  playerPrint(player);
+               }
+            }
+        break;
+        case 4:{
+           int id;
+           printf("\nEnter player ID: ");
            scanf("%d", &id);
            HashNode *node = hashmap_search(&db->index, id);
            if (node == NULL){
               printf("Player not found.\n");
-           }
-           else{
-              Player *player = player_dbget(db, node->playerIndex);
-              printf("\nPlayer found!\n");
-              playerPrint(player);
-           }
-        break;
-        case 4:
-        
-        break;
+            }
+            else{
+               Player *player = player_dbget(db, node->playerIndex);
+               profileprint(player);
+            }
+            break;
+         }
         case 5:
         
         break;
@@ -70,8 +86,8 @@ void showMenu(PlayerDatabase *db){
         case 13:
         break;
         case 14:
-         //   player_dbclear(db);
-         //   printf("Database emptied.\n");
+         player_dbclear(db);
+         printf("Database emptied.\n");
            break;
         case 15:
         player_dbPrint(db);

@@ -20,6 +20,7 @@ const char *regionToString(Region region)
       return "UNKNOWN";
    }
 }
+
 void playerInit(Player *player, int id, const char *name, int rating, int ping, Region region,PlayerStatus status,int wins,int losses,time_t queuetime){
    player->id=id;
    strcpy(player->name,name);
@@ -31,6 +32,7 @@ void playerInit(Player *player, int id, const char *name, int rating, int ping, 
    player->losses=losses;
    player->queuetime=queuetime;
 }
+
 void playerPrint(const Player *player){
    printf("\n%s's id:%d\n",player->name,player->id);
    printf("%s's rating:%d\n",player->name,player->rating);
@@ -126,4 +128,29 @@ void profileprint(Player *player){
    printf("Wins      : %d\n", player->wins);
    printf("Losses    : %d\n", player->losses);
    printf("====================================\n");
+}
+
+void player_dbremove(PlayerDatabase *db, int player_id){
+   HashNode *node = hashmap_search(&db->index,player_id);
+   if(node == NULL){
+      printf("Player not found.\n");
+      return;
+   }
+   size_t index = node->playerIndex;
+   if (index != db->size - 1)
+   {
+      Player movedPlayer = db->data[db->size - 1];
+      db->data[index] = movedPlayer;
+      hashmap_delete(&db->index, movedPlayer.id);
+      hashmap_insert(&db->index,movedPlayer.id,index);
+   }
+   hashmap_delete(&db->index, player_id);
+   db->size--;
+   printf("Player removed successfully.\n");
+}
+
+void player_dbclear(PlayerDatabase *db){
+   hashmap_destroy(&db->index);
+   db->size = 0;
+   hashmap_init(&db->index, 16);
 }
