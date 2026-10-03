@@ -2,9 +2,6 @@
 
 An experimental DSA-based matchmaking simulator written in C (C11) using GCC/MinGW on Windows.
 
-
-Player features are addded hopefully i covered all by now else i will revise
-=======
 ## Features
 
 - **Player Database**: Dynamic array + HashMap (ID → index) for O(1) average lookup
