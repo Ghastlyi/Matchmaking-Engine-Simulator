@@ -2,7 +2,6 @@
 
 An experimental DSA-based matchmaking simulator written in C (C11) using GCC/MinGW on Windows.
 
-<<<<<<< HEAD
 
 Player features are addded hopefully i covered all by now else i will revise
 =======
@@ -125,4 +124,3 @@ See [case-study/Research.md](case-study/Research.md) for:
 - Design decisions for viva defense
 - Binary file formats
 - Limitations
->>>>>>> 0cb6a1c (Finalized Project)
