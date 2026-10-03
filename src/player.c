@@ -23,7 +23,8 @@ const char *regionToString(Region region)
 
 void playerInit(Player *player, int id, const char *name, int rating, int ping, Region region,PlayerStatus status,int wins,int losses,time_t queuetime){
    player->id=id;
-   strcpy(player->name,name);
+   strncpy(player->name, name, MAX_NM_LEN - 1);
+   player->name[MAX_NM_LEN - 1] = '\0';
    player->rating=rating;
    player->ping=ping;
    player->region=region;
@@ -40,22 +41,24 @@ void playerPrint(const Player *player){
    printf("%s's region:%s\n", player->name,regionToString(player->region));
 }
 Player registerPlayer(){
-   int id=(int)time(NULL);
+   static int id_offset = 0;
+   int id = (int)time(NULL) + id_offset++;
    char name[50];
    int rating=1500;
    int ping,servercode;
    printf("\nEnter player name:");
    scanf(" %49s",name);
-   printf("Select player region:\n1.India\n2.Singapore\n3.Europe\n4.North America\nEnter choice:");
-   do{
-      scanf(" %d",&servercode);
-      if(servercode<1 || servercode>4){
-         printf("\nInvalid choice please enter 1-4\n");
-      }
-   }while(servercode<1 || servercode>4);
-   Region region = (Region)(servercode-1);
-   printf("Enter the ping of the player:");
-   scanf("%d",&ping);
+   printf("Select player region:\n1.India\n2.Singapore\n3.Europe\n4.North America\nEnter choice: ");
+   while (scanf("%d", &servercode) != 1 || servercode < 1 || servercode > 4) {
+      printf("Invalid choice. Please enter 1-4: ");
+      while (getchar() != '\n');
+   }
+   Region region = (Region)(servercode - 1);
+   printf("Enter the ping of the player (ms): ");
+   while (scanf("%d", &ping) != 1 || ping < 1) {
+      printf("Invalid ping. Enter a positive number: ");
+      while (getchar() != '\n');
+   }
    PlayerStatus status = 0;
    Player p;
    playerInit(&p,id,name,rating,ping,region,status,0,0,0);
@@ -103,13 +106,29 @@ void player_dbdestroy(PlayerDatabase *db){
 }
 
 void player_dbPrint(const PlayerDatabase *db){
-   printf("\nPlayers in database: %zu\n", db->size);
-   printf("Database capacity: %zu\n\n", db->capacity);
-   for (size_t i = 0; i < db->size; i++){
-      printf("Player %zu:\n", i);
-      playerPrint(player_dbget((PlayerDatabase *)db,i));
-      printf("--------------------------\n");
+   printf("\n------------------------------------------------------------------------\n");
+   printf("                         REGISTERED PLAYERS\n");
+   printf("------------------------------------------------------------------------\n");
+   printf(" Total: %zu player(s) | Capacity: %zu\n", db->size, db->capacity);
+   if (db->size == 0) {
+      printf(" Database is currently empty.\n");
+      printf("------------------------------------------------------------------------\n");
+      return;
    }
+   printf(" Index | ID    | Name            | Rating | Region | Ping | Status\n");
+   printf("-------+-------+-----------------+--------+--------+------+-------------\n");
+   for (size_t i = 0; i < db->size; i++){
+      const Player *p = player_dbget((PlayerDatabase *)db, i);
+      const char *st_str = "Available";
+      if (p->status == waitingPlayers) st_str = "Waiting";
+      else if (p->status == inmatchPlayers) st_str = "In Match";
+      else if (p->status == inactivePlayers) st_str = "Inactive";
+
+      printf(" [%3zu] | %-5d | %-15s | %-6d | %-6s | %3dms| %s\n",
+             i, p->id, p->name, p->rating, regionToString(p->region),
+             p->ping, st_str);
+   }
+   printf("------------------------------------------------------------------------\n");
 }
 
 Player *player_dbget(PlayerDatabase *db, size_t index){
@@ -141,8 +160,10 @@ void player_dbremove(PlayerDatabase *db, int player_id){
    {
       Player movedPlayer = db->data[db->size - 1];
       db->data[index] = movedPlayer;
-      hashmap_delete(&db->index, movedPlayer.id);
-      hashmap_insert(&db->index,movedPlayer.id,index);
+      if (movedPlayer.id != player_id) {
+         hashmap_delete(&db->index, movedPlayer.id);
+         hashmap_insert(&db->index, movedPlayer.id, index);
+      }
    }
    hashmap_delete(&db->index, player_id);
    db->size--;

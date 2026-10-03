@@ -1,6 +1,5 @@
 #ifndef HASHMAP_H
 #define HASHMAP_H
-#include <stdio.h>
 #include <stdlib.h>
 typedef struct HashNode{
    int pid;
@@ -18,5 +17,5 @@ void hashmap_destroy(HashMap *map);
 int hashmap_insert(HashMap *map,int player_id,size_t player_index);
 HashNode *hashmap_search(HashMap *map,int player_id);
 int hashmap_delete(HashMap *map,int player_id);
-static size_t hash(int player_id, size_t bucket_count);
+
 #endif

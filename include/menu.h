@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
-#include "player.h"
+#include "matchmaking.h"
 
-void showMenu(PlayerDatabase *db);
+void showMenu(MatchmakingSystem *sys);
 
 #endif

@@ -1,11 +1,10 @@
-#include "player.h"
-#include "common.h"
-
 #ifndef MATCHMAKINGSYSTEM_H
 #define MATCHMAKINGSYSTEM_H
-//This will be the structure which will store all datatypes of application to keep relevances
-typedef struct{
-   PlayerDatabase players;
-}matchmakingSystem;
+
+#include "matchmaking.h"
+
+/* This header re-exports the MatchmakingSystem type.
+ * The actual struct and functions are declared in matchmaking.h.
+ * This file is kept for backward compatibility with the original project. */
 
 #endif
