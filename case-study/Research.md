@@ -2,7 +2,7 @@
 
 > **Project Type**: Experimental DSA-based Matchmaking Simulator  
 > **Language**: C11 (GCC/MinGW on Windows)  
-> **Author**: Student Project — Data Structures & Algorithms  
+> **Author**: Parth Pawar
 > **Status**: Working simulation with dynamic compatibility weighting
 
 ---
